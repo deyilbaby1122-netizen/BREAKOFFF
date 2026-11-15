@@ -1,0 +1,158 @@
+/**
+ * globals.css
+ * BREAKOFF design system:
+ * - Cream/off-white background, black + white palette
+ * - Elegant editorial typography (serif display, sans UI)
+ * - Subtle premium animations
+ * - Base reset + spacing
+ */
+/* Brand palette: cream/off-white + near-black */
+--color-cream-50: #faf8f5;
+--color-cream-100: #f5f1e8;
+--color-cream-200: #ece5da;
+--color-cream-300: #e3dccd;
+--color-ink-900: #1a1a1a;
+--color-ink-800: #2b2b2b;
+--color-ink-700: #3a3a3a;
+--color-ink-500: #6b6b6b;
+--color-ink-300: #b3b3b3;
+--color-white: #ffffff;
+--color-black: #000000;
+
+/* Typography scale */
+--font-serif-display: "Georgia", "Times New Roman", serif;
+--font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+
+--text-xs: 0.75rem;
+--text-sm: 0.875rem;
+--text-base: 1rem;
+--text-lg: 1.125rem;
+--text-xl: 1.25rem;
+--text-2xl: 1.5rem;
+--text-3xl: 1.875rem;
+--text-4xl: 2.25rem;
+--text-5xl: 3rem;
+--text-6xl: 3.75rem;
+
+--tracking-tight: -0.02em;
+--tracking-wide: 0.05em;
+
+/* Runtime animations (subtle, premium) */
+--anim-ease: cubic-bezier(0.22, 1, 0.36, 1);
+--anim-duration-fast: 150ms;
+--anim-duration-normal: 250ms;
+--anim-duration-slow: 400ms;
+
+/*
+ * 1. Use a more intuitive box model.
+ * 2. Background color v2 as the page foundation.
+ * 3. Prevent overflow on small screens.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Fallback font stack before Inter loads */
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-cream-50);
+  color: var(--color-ink-900);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Display serif for hero / headings */
+.display-serif {
+  font-family: var(--font-serif-display);
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduce-motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus-visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+/* Prevent text size jank on mobile */
+img,
+picture,
+video,
+canvas,
+svg,
+iframe {
+  max-width: 100%;
+  display: block;
+}
+
+/* Reusable visual utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skeleton shimmer for loading states */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-cream-200) 25%,
+    var(--color-cream-300) 50%,
+    var(--color-cream-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Page transition fade */
+.page-enter {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--anim-duration-normal) var(--anim-ease),
+    transform var(--anim-duration-normal) var(--anim-ease);
+}
