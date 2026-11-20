@@ -7,6 +7,7 @@
  * - Providers (Supabase auth client)
  */
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
 import { Navbar } from "@/components/navbar";
@@ -16,12 +17,6 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
-});
-
-const georgia = Georgia({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-georgia",
 });
 
 export const metadata: Metadata = {
@@ -64,7 +59,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${georgia.variable}`}>
+      <body className={inter.variable}>
         <div className="min-h-screen">          <AuthProvider>
             <div className="min-h-screen flex flex-col">
               <Navbar />

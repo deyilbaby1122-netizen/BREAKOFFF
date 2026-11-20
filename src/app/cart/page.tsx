@@ -5,17 +5,13 @@
  * - Add/remove items, quantity controls
  * - Delivery + total calculation
  */
-import { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
 import { ShoppingBag, ArrowRight } from "@/components/icons";
 import { useCartStore } from "@/lib/stores";
 import { productById } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "Shopping Cart | BREAKOFF",
-  description: "Your shopping cart. Review your items and proceed to checkout.",
-};
 
 export default function CartPage() {
   const { items, updateQty, removeFromCart, subtotal, totalItems } = useCartStore();

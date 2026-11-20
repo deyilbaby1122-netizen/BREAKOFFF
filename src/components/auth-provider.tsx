@@ -2,8 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User, Session } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
-import { getDemoStore } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface AuthUser extends User {
   fullName?: string;
@@ -27,33 +26,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Demo mode: no Supabase credentials, so there is no session to restore.
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        setUser({
-          id: session.user.id,
-          email: session.user.email || "",
-          userMetadata: session.user.user_metadata || {},
-          appMeta: session.user.app_metadata || {},
-          ...session.user,
-        } as AuthUser);
+        setUser({ ...session.user } as AuthUser);
       }
     });
 
-    // Listen forauth changes
+    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       if (session?.user) {
-        setUser({
-          id: session.user.id,
-          email: session.user.email || "",
-          userMetadata: session.user.user_metadata || {},
-          appMeta: session.user.app_metadata || {},
-          ...session.user,
-        } as AuthUser);
+        setUser({ ...session.user } as AuthUser);
       } else {
         setUser(null);
       }
@@ -64,6 +57,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string = "") => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Accounts are unavailable in demo mode") };
+    }
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -79,6 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Accounts are unavailable in demo mode") };
+    }
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       return { error: error ?? null };
@@ -88,13 +87,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    if (isSupabaseConfigured) await supabase.auth.signOut();
     setUser(null);
     setSession(null);
   };
 
   const updateProfile = async (fullName: string) => {
     if (!session?.user) return { error: new Error("No user logged in") };
+    if (!isSupabaseConfigured) {
+      return { error: new Error("Accounts are unavailable in demo mode") };
+    }
     try {
       const { error } = await supabase.auth.updateUser({
         data: { full_name: fullName },

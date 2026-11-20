@@ -6,42 +6,50 @@
  * - Subtle premium animations
  * - Base reset + spacing
  */
-/* Brand palette: cream/off-white + near-black */
---color-cream-50: #faf8f5;
---color-cream-100: #f5f1e8;
---color-cream-200: #ece5da;
---color-cream-300: #e3dccd;
---color-ink-900: #1a1a1a;
---color-ink-800: #2b2b2b;
---color-ink-700: #3a3a3a;
---color-ink-500: #6b6b6b;
---color-ink-300: #b3b3b3;
---color-white: #ffffff;
---color-black: #000000;
+@import "tailwindcss";
 
-/* Typography scale */
---font-serif-display: "Georgia", "Times New Roman", serif;
---font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+/* Brand palette: cream/off-white + near-black.
+ * Tailwind v4 reads these tokens from @theme and generates
+ * utilities such as bg-cream-50, text-ink-900, font-sans, etc. */
+@theme {
+  --color-cream-50: #faf8f5;
+  --color-cream-100: #f5f1e8;
+  --color-cream-200: #ece5da;
+  --color-cream-300: #e3dccd;
+  --color-ink-900: #1a1a1a;
+  --color-ink-800: #2b2b2b;
+  --color-ink-700: #3a3a3a;
+  --color-ink-500: #6b6b6b;
+  --color-ink-300: #b3b3b3;
+  --color-white: #ffffff;
+  --color-black: #000000;
 
---text-xs: 0.75rem;
---text-sm: 0.875rem;
---text-base: 1rem;
---text-lg: 1.125rem;
---text-xl: 1.25rem;
---text-2xl: 1.5rem;
---text-3xl: 1.875rem;
---text-4xl: 2.25rem;
---text-5xl: 3rem;
---text-6xl: 3.75rem;
+  /* Typography scale */
+  --font-serif-display: "Georgia", "Times New Roman", serif;
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
 
---tracking-tight: -0.02em;
---tracking-wide: 0.05em;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.05em;
+}
 
 /* Runtime animations (subtle, premium) */
---anim-ease: cubic-bezier(0.22, 1, 0.36, 1);
---anim-duration-fast: 150ms;
---anim-duration-normal: 250ms;
---anim-duration-slow: 400ms;
+:root {
+  --anim-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --anim-duration-fast: 150ms;
+  --anim-duration-normal: 250ms;
+  --anim-duration-slow: 400ms;
+}
 
 /*
  * 1. Use a more intuitive box model.

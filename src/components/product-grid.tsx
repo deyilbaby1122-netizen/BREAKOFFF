@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Sliders, SortAsc, Filter } from "@/components/icons";
 import { ProductCard } from "@/components/product-card";
 import { fetchProducts, type QueryOptions } from "@/lib/supabase";
-import type { Product } from "@/lib/products";
+import { CATEGORIES, type Product } from "@/lib/products";
 
 interface ProductGridProps {
   products?: Product[];
@@ -181,7 +181,7 @@ export function ProductGrid({ products: overrideProducts, gender = "men", catego
         >
           <option value="">All Colors</option>
           {data?.length ? (
-            Array.from(new Set(data.map((p: Product) => p.colors.map((c) => c.name)))).map((color) => (
+            Array.from(new Set(data.flatMap((p: Product) => p.colors.map((c) => c.name)))).map((color: string) => (
               <option key={color} value={color}>{color}</option>
             ))
           ) : (

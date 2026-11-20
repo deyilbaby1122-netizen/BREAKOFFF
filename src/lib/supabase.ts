@@ -11,8 +11,9 @@
  * This is the *only* file that decides which mode runs, so no UI ever
  * "pretends" a backend is connected when it isn't.
  */
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database";
+import { PRODUCTS } from "./products";
 
 // Channel names for cross-tab sync.
 export const SB_CHANNELS = {
@@ -20,7 +21,13 @@ export const SB_CHANNELS = {
   WISHLIST: "breakoff:wishlist",
 } as const;
 
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
+export const isSupabaseConfigured = Boolean(
+  typeof process !== "undefined" &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
+let supabaseInstance: SupabaseClient<Database> | null = null;
 let demoStore: DemoStore | null = null;
 
 // ---- Demo-mode in-memory store ----------------------------------------------
@@ -179,7 +186,7 @@ function createDemoStore(): DemoStore {
 if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_SUPABASE_URL) {
   supabaseInstance = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
     {
       auth: {
         persistSession: true,
@@ -195,8 +202,9 @@ if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_SUPABASE_URL) {
 }
 
 // If supabase client is created, export it. Otherwise export the demo store.
-export const supabase =
-  supabaseInstance ?? ({} as ReturnType<typeof createClient>);
+// Consumers must check `isSupabaseConfigured` before calling into `supabase`.
+export const supabase: SupabaseClient<Database> =
+  supabaseInstance ?? (null as unknown as SupabaseClient<Database>);
 
 // Expose the demo store so components can import the real instance.
 export { demoStore, createDemoStore };

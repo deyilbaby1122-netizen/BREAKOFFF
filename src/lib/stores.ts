@@ -2,59 +2,68 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { getDemoStore, productById } from "./supabase";
-import type { CartItem, ProductRecord } from "./supabase";
+import type { CartItem } from "./supabase";
 
 // ============================================================================
 // CART STORE
 // ============================================================================
 interface CartState {
   items: CartItem[];
+  subtotal: number;
+  totalItems: number;
   updateQty: (id: string, qty: number) => void;
   removeFromCart: (id: string) => void;
   addToCart: (item: CartItem) => void;
   clear: () => void;
 }
 
+/** Derive the totals that every cart consumer reads from the store. */
+function cartTotals(items: CartItem[]) {
+  return {
+    subtotal: items.reduce((sum, i) => {
+      const p = productById(i.id);
+      return sum + (p?.price ?? 0) * i.qty;
+    }, 0),
+    totalItems: items.reduce((sum, i) => sum + i.qty, 0),
+  };
+}
+
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
-      items: [],
-      updateQty: (id, qty) => {
-        const store = getDemoStore();
-        store.updateQty(id, qty);
-        set({ items: store.cart });
-      },
-      removeFromCart: (id) => {
-        const store = getDemoStore();
-        store.removeFromCart(id);
-        set({ items: store.cart });
-      },
-      addToCart: (item) => {
-        const store = getDemoStore();
-        store.addToCart(item);
-        set({ items: store.cart });
-      },
-      clear: () => set({ items: [] }),
-      get subtotal() {
-        return this.items.reduce((sum, i) => {
-          const p = productById(i.id);
-          return sum + (p?.price ?? 0) * i.qty;
-        }, 0);
-      },
-      get totalItems() {
-        return this.items.reduce((sum, i) => sum + i.qty, 0);
-      },
-    }),
+    (set, get) => {
+      const setItems = (items: CartItem[]) =>
+        set({ items, ...cartTotals(items) });
+
+      return {
+        items: [],
+        subtotal: 0,
+        totalItems: 0,
+        updateQty: (id, qty) => {
+          const store = getDemoStore();
+          store.updateQty(id, qty);
+          setItems(store.cart);
+        },
+        removeFromCart: (id) => {
+          const store = getDemoStore();
+          store.removeFromCart(id);
+          setItems(store.cart);
+        },
+        addToCart: (item) => {
+          const store = getDemoStore();
+          store.addToCart(item);
+          setItems(store.cart);
+        },
+        clear: () => setItems([]),
+      };
+    },
     {
       name: "breakoff-cart",
-      serialize: (state) => ({
-        ...state,
-        items: state.items.map((i) => ({ ...i })),
-      }),
-      deserialize: (state) => ({
-        ...state,
-        items: state.items?.map((i) => ({ ...i })) ?? [],
-      }),
+      // Only the items are persisted; totals are always recomputed on load.
+      partialize: (state) => ({ items: state.items }),
+      merge: (persisted, current) => {
+        const items = (persisted as { items?: CartItem[] } | undefined)?.items ?? [];
+        return { ...current, items, ...cartTotals(items) };
+      },
     }
   )
 );
@@ -74,7 +83,7 @@ interface WishlistState {
 
 export const useWishlistStore = create<WishlistState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       items: [],
       isOpen: false,
       add: (id) => {
@@ -105,20 +114,15 @@ export const useWishlistStore = create<WishlistState>()(
         const exists = store.wishlist.includes(id);
         if (exists) {
           store.removeFromWishlist(id);
-          set({ items: store.wishlist });
         } else {
           store.addToWishlist(id);
-          set({ items: store.wishlist });
         }
+        set({ items: store.wishlist });
       },
     }),
     {
       name: "breakoff-wishlist",
-      serialize: (state) => ({ ...state, items: state.items }),
-      deserialize: (state) => ({
-        ...state,
-        items: state.items ?? [],
-      }),
+      partialize: (state) => ({ items: state.items }),
     }
   )
 );
@@ -131,7 +135,8 @@ import { useEffect } from "react";
 
 export function syncDemoToStores() {
   const store = getDemoStore();
-  useCartStore.setState({ items: store.cart });
+  const items = store.cart;
+  useCartStore.setState({ items, ...cartTotals(items) });
   useWishlistStore.setState({ items: store.wishlist });
 }
 

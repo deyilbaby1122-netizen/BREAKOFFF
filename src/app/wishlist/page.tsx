@@ -5,16 +5,13 @@
  * - Move products to cart
  * - Persist saved items
  */
-import { Metadata } from "next";
+"use client";
+
+import Link from "next/link";
 import { Heart } from "@/components/icons";
 import { useWishlistStore } from "@/lib/stores";
 import { productById } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
-
-export const metadata: Metadata = {
-  title: "Wishlist | BREAKOFF",
-  description: "Your saved wishlist. Browse and add items to your cart.",
-};
 
 export default function WishlistPage() {
   const { items: wishlist, moveToCart, clear } = useWishlistStore();
@@ -52,9 +49,12 @@ export default function WishlistPage() {
               <p className="text-ink-500 mb-6">
                 Save items you love and we&apos;ll remind you when they&apos;re back.
               </p>
-              <Button variant="secondary" className="!text-base !px-6" asChild>
-                <a href="/">Browse Products</a>
-              </Button>
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center gap-2 text-sm font-medium rounded-full px-6 py-2.5 border border-black/10 bg-white text-black hover:bg-black hover:text-white hover:border-black transition-all duration-200"
+              >
+                Browse Products
+              </Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

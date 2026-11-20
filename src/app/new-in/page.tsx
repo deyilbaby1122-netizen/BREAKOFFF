@@ -18,19 +18,9 @@ export const metadata: Metadata = {
 
 export default async function NewInPage() {
   // New arrivals: products with isNew, sorted by sortOrder
-  const newInProducts =PRODUCTS.filter((p) => p.isNew)
-    .sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0))
-    .map((p) => ({
-      id: p.id,
-      name: p.name,
-      category: p.category,
-      price: p.price,
-      originalPrice: p.originalPrice,
-      images: p.images,
-      isSale: p.isSale,
-      isNew: p.isNew,
-      badge: p.badge,
-    }));
+  const newInProducts = PRODUCTS.filter((p) => p.isNew).sort(
+    (a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0)
+  );
 
   return (
     <>

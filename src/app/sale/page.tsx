@@ -7,7 +7,7 @@
  */
 import { Metadata } from "next";
 import { ProductGrid } from "@/components/product-grid";
-import { PRODUCT } from "@/lib/products";
+import { getFeaturedProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Sale | BREAKOFF",
@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 
 export default async function SalePage() {
   // Sale products: products that are on sale
-  const saleProducts = getFeaturedProducts("men").filter((p) => p.isSale);
   const menSale = getFeaturedProducts("men").filter((p) => p.isSale);
   const womenSale = getFeaturedProducts("women").filter((p) => p.isSale);
   const saleItems = [...menSale, ...womenSale];

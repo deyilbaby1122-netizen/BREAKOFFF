@@ -36,7 +36,7 @@ export default function AccountPage() {
   const [loggingOut, setLoggingOut] = useState(false);
 
   const demoStore = getDemoStore();
-  const orderHistory = demoStore.orders;
+  const orderHistory = demoStore.orders.flat();
   const wishlistItems = demoStore.wishlist;
 
   const handleLogout = async () => {

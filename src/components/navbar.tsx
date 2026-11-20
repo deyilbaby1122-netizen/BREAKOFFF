@@ -16,9 +16,13 @@ import { PRODUCTS } from "@/lib/products";
 
 export function Navbar() {
   const pathname = usePathname();
-  const { items, removeFromCart } = useCartStore();
-  const { wishlist } = useWishlistStore();
+  const { items } = useCartStore();
+  const { items: wishlist } = useWishlistStore();
   const searchRef = useRef<HTMLInputElement>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [scrolled, setScrolled] = useState(false);
 
   // Close mobile menu & search on route change
   useEffect(() => {
@@ -43,6 +47,8 @@ export function Navbar() {
         p.brand.toLowerCase().includes(q)
     ).slice(0, 8);
   };
+
+  const searchResults = doSearch(searchQuery);
 
   const openResult = (id: string) => {
     setSearchOpen(false);

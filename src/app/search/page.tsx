@@ -62,13 +62,7 @@ export default async function SearchPage({
       {/* Search bar */}
       <section className="py-6 bg-white border-b border-cream-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <form
-            action="/search"
-            className="relative"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form action="/search" className="relative">
             <div className="relative">
               <Search
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-400"
@@ -82,15 +76,13 @@ export default async function SearchPage({
                 defaultValue={query}
               />
               {query && (
-                <button
-                  type="button"
+                <Link
+                  href="/search"
+                  aria-label="Clear search"
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-700"
-                  onClick={() => {
-                    window.location.href = "/search";
-                  }}
                 >
                   <X size={16} />
-                </button>
+                </Link>
               )}
             </div>
           </form>

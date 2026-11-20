@@ -16,9 +16,8 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/product-gallery";
-import { useCartStore } from "@/lib/stores";
 import { productById } from "@/lib/supabase";
-import { getProductsByIds } from "@/lib/products";
+import { PRODUCTS } from "@/lib/products";
 
 export default async function ProductDetailsPage({
   params,

@@ -154,10 +154,7 @@ export default async function HomePage() {
           <p className="text-white/70 max-w-lg mx-auto mb-8">
             Be the first to know about new arrivals, exclusive offers, and behind-the-scenes moments.
           </p>
-          <form
-            className="max-w-md mx-auto flex gap-3"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          <form className="max-w-md mx-auto flex gap-3" action="/">
             <input
               type="email"
               placeholder="Enter your email"

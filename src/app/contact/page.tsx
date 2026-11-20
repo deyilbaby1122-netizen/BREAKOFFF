@@ -4,7 +4,15 @@
  */
 import { Metadata } from "next";
 import Link from "next/link";
-import { Mail, Phone, MapPin, HelpCircle } from "@/components/icons";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  HelpCircle,
+  MessageCircle,
+  Shield,
+} from "@/components/icons";
+import { ContactForm } from "@/app/contact/contact-form";
 
 export const metadata: Metadata = {
   title: "Contact Us | BREAKOFF",
@@ -40,38 +48,7 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-ink-900 mb-6">
                 Send us a message
               </h2>
-              <form
-                className="space-y-4"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Your name"
-                    className="w-full px-3 py-2.5 border border-cream-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black/20"
-                  />
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="w-full px-3 py-2.5 border border-cream-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black/20"
-                  />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Subject"
-                  className="w-full px-3 py-2.5 border border-cream-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black/20"
-                />
-                <div>
-                  <textarea
-                    placeholder="Message"
-                    rows={5}
-                    className="w-full px-3 py-2.5 border border-cream-200 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black/20"
-                  />
-                </div>
-                <Button className="!text-base !px-6 !py-3 !rounded-full">
-                  Send Message
-                </Button>
-              </form>
+              <ContactForm />
             </div>
 
             {/* Contact details */}
@@ -128,29 +105,16 @@ export default function ContactPage() {
                   Social
                 </h3>
                 <div className="flex gap-3">
-                  <a
-                  key="instagram"
-                  href="#"
-                  className="w-10 h-10 bg-cream-100 rounded-full flex items-center justify-center text-ink-600 hover:bg-black hover:text-white transition-colors"
-                >
-                  <Shield size={14} />
-                </a>
-                <a
-                  key="facebook"
-                  href="#"
-                  className="w-10 h-10 bg-cream-100 rounded-full flex items-center justify-center text-ink-600 hover:bg-black hover:text-white transition-colors"
-                >
-                  <Shield size={14} />
-                </a>
-                <a
-                  key="twitter"
-                  href="#"
-                  className="w-10 h-10 bg-cream-100 rounded-full flex items-center justify-center text-ink-600 hover:bg-black hover:text-white transition-colors"
-                >
-                  <Shield size={14} />
-                  <span className="text-xs font-bold">{label[0]}</span>
-                </a>
-                ))
+                  {["Instagram", "Facebook", "X"].map((label) => (
+                    <a
+                      key={label}
+                      href="#"
+                      aria-label={label}
+                      className="w-10 h-10 bg-cream-100 rounded-full flex items-center justify-center text-ink-600 hover:bg-black hover:text-white transition-colors"
+                    >
+                      <span className="text-xs font-bold">{label[0]}</span>
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>

@@ -33,7 +33,9 @@ export function ProductGallery({
   const product = productById(productId);
   const [showSize, setShowSize] = useState(false);
   const [showColor, setShowColor] = useState(false);
-  const [currentQty, setCurrentQty] = useState(quantity);
+  const [currentQty] = useState(quantity);
+  const [currentSize, setCurrentSize] = useState(size ?? "");
+  const [currentColor, setCurrentColor] = useState(color ?? "");
 
   if (!product) {
     return (
